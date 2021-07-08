@@ -1,24 +1,27 @@
-import logo from './logo.svg';
-import './App.css';
+import React,{useState,useEffect} from 'react'
+import {BrowserRouter as Router, Link,Switch, Route , withRouter, Redirect} from 'react-router-dom'
 
-function App() {
+import './App.css';
+import Navbar from './core-components/Navbar'
+
+const App=(props)=> {
+  const [userLoggedIn,setUserLoggedIn]=useState(false);
+
+  const handleAuth=()=>{
+    setUserLoggedIn(!userLoggedIn);
+  }
+
+  useEffect(()=>{
+    if(localStorage.getItem('key')){
+      handleAuth();
+    }
+  },[])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router className="App">
+      <Navbar userLoggedIn={userLoggedIn} handleAuth={handleAuth}/>
+      {userLoggedIn? (<Redirect to="/dashboard"/> ||<Redirect to="/dashboard/:imdbID"/> ):<Redirect to="/"/>}
+    </Router>
   );
 }
 
